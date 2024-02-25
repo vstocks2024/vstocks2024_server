@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid())
+  firstName  String
+  familyName String?
+  email      String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Category {
+  id            String   @id @default(uuid())
+  category_name String   @unique
+  template      Template @relation(fields: [template_id], references: [id])
+  template_id   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Template {
+  id             String           @id @default(uuid())
+  template_data  Json[]
+  Category       Category[]
+  Template_Video Template_Video[]
+  Template_Image Template_Image[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model Template_Video {
+  template    Template @relation(fields: [template_id], references: [id])
+  template_id String
+  video       Video    @relation(fields: [video_id], references: [id])
+  video_id    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@id([template_id, video_id])
+}
+
+model Template_Image {
+  template    Template @relation(fields: [template_id], references: [id])
+  template_id String
+  image       Image    @relation(fields: [image_id], references: [id])
+  image_id    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@id([template_id, image_id])
+}
+
+model Video {
+  id             String           @id @default(uuid())
+  video_name     String
+  Template_Video Template_Video[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model Image {
+  id             String           @id @default(uuid())
+  image_name     String
+  Template_Image Template_Image[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
