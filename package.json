@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon build/index",
-    "build": "tsc -p .",
+    "build": "prisma generate && tsc -p .",
     "dev": "tsc-watch --onSuccess \"npm start\""
   },
   "keywords": [],
