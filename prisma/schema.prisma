@@ -1,0 +1,249 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema", "relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminProfiles {
+  id               String         @id @default(uuid())
+  adminname        String         @unique
+  fullname         String
+  email            String
+  phone            String
+  password         String
+  imageurl         String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@map("admin_profiles")
+  
+}
+
+model Category {
+  id                  String                @id @default(uuid())
+  name                String                @unique
+  description         String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  Vectors_Category    vector_category[]
+  Animations_Category animations_category[]
+
+  @@map("category")
+  
+}
+
+model Template {
+  id             String           @id @default(uuid())
+  template_data  Json[]
+  Template_Video Template_Video[]
+  Template_Image Template_Image[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  @@map("template")
+  
+}
+
+model Template_Video {
+  template    Template @relation(fields: [template_id], references: [id])
+  template_id String
+  video       Video    @relation(fields: [video_id], references: [id])
+  video_id    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@id([template_id, video_id])
+  @@map("template_video")
+  
+}
+
+model Template_Image {
+  template    Template @relation(fields: [template_id], references: [id])
+  template_id String
+  image       Image    @relation(fields: [image_id], references: [id])
+  image_id    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@id([template_id, image_id])
+  @@map("template_image")
+  
+}
+
+model Video {
+  id             String           @id @default(uuid())
+  video_name     String
+  Template_Video Template_Video[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@map("video")
+  
+}
+
+model Image {
+  id             String           @id @default(uuid())
+  image_name     String
+  Template_Image Template_Image[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@map("image")
+  
+}
+
+model Tags {
+  id             String           @id @default(uuid())
+  name           String           @unique
+  description    String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  Vectors_Tag    vector_tag[]
+  Animations_Tag animations_tag[]
+
+  @@map("tags")
+  
+}
+
+model Vectors {
+  serial_no        Int               @default(autoincrement())
+  id               String            @id @default(uuid())
+  name             String            @unique
+  description      String
+  likes            Int
+  shares           Int
+  format           String
+  width            Float
+  height           Float
+  license          String
+  orientation      String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  Vectors_Category vector_category[]
+  Vectors_Tag      vector_tag[]
+  Vectors_Url      vectors_url[]
+
+  @@map("vectors")
+  
+}
+
+model vector_category {
+  vector      Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vector_id   String
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category_id String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@id([vector_id, category_id])
+  @@map("vectors_category")
+  
+}
+
+model vector_tag {
+  vector    Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vector_id String
+  tag       Tags     @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag_id    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([vector_id, tag_id])
+  @@map("vectors_tag")
+  
+}
+
+model vectors_url {
+  serial_no   Int      @default(autoincrement())
+  vector      Vectors  @relation(fields: [vector_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vector_id   String
+  name        String   @unique
+  description String
+  likes       Int
+  shares      Int
+  format      String
+  width       Float
+  height      Float
+  license     String
+  orientation String
+  url         String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@id([vector_id])
+  @@map("vectors_url")
+  
+}
+
+model animations {
+  serial_no           Int                   @default(autoincrement())
+  id                  String                @id @default(uuid())
+  name                String                @unique
+  animation_data      Json[]
+  canvas_data         Json[]
+  description         String
+  likes               Int
+  shares              Int
+  format              String
+  license             String
+  orientation         String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  animations_category animations_category[]
+  animations_tag      animations_tag[]
+  animations_url      animations_url[]
+
+  @@map("animations")
+  
+}
+
+model animations_url {
+  serial_no      Int        @default(autoincrement())
+  animation      animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation_id   String
+  name           String     @unique
+  description    String
+  animation_data Json[]
+  canvas_data    Json[]
+  likes          Int
+  shares         Int
+  format         String
+  license        String
+  orientation    String
+  thumbnail_url  String     @unique
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@id([animation_id])
+  @@map("animations_url")
+  
+}
+
+model animations_category {
+  animation    animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation_id String
+  category     Category   @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category_id  String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id([animation_id, category_id])
+  @@map("animations_category")
+  
+}
+
+model animations_tag {
+  animation    animations @relation(fields: [animation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animation_id String
+  tag          Tags       @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  tag_id       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@id([animation_id, tag_id])
+  @@map("animations_tag")
+}
+
