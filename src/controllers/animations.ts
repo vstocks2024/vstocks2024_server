@@ -58,7 +58,9 @@ export async function handleCreateNewAnimation(req: any, res: any, next: any) {
     const license: string = req.body.license;
     const orientation: string = req.body.orientation;
     const template = req.body.template;
+    const canvas_data=req.body.canvas_data;
     console.log(template);
+    console.log(canvas_data);
 
     // console.log(name);
     // console.log(description);
@@ -74,6 +76,7 @@ export async function handleCreateNewAnimation(req: any, res: any, next: any) {
           name: name,
           description: description,
           animation_data: template,
+          canvas_data:canvas_data,
           license: license,
           orientation: orientation,
           format: format,
@@ -124,6 +127,7 @@ export async function handleCreateNewAnimation(req: any, res: any, next: any) {
                             name: dbresolve1.name,
                             description: dbresolve1.description,
                             animation_data: template,
+                            canvas_data:canvas_data,
                             likes: dbresolve1.likes,
                             shares: dbresolve1.shares,
                             format: dbresolve1.format,

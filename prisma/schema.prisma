@@ -183,7 +183,7 @@ model animations {
   id                  String                @id @default(uuid())
   name                String                @unique
   animation_data      Json[]
-  canvas_data         Json[]
+  canvas_data         Json                  
   description         String
   likes               Int
   shares              Int
@@ -207,7 +207,7 @@ model animations_url {
   name           String     @unique
   description    String
   animation_data Json[]
-  canvas_data    Json[]
+  canvas_data    Json       
   likes          Int
   shares         Int
   format         String
