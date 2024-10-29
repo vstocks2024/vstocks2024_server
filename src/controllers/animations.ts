@@ -1,10 +1,11 @@
+import { Request, Response } from "express";
 import { prisma } from "../prismaClient";
 import { uploadFile } from "../utils/s3";
 
-export async function handleGetAnimationsList(req: any, res: any, next: any) {
+export async function handleGetAnimationsList(req: Request, res: Response, next: any) {
   try {
     if (!req) res.status(404).send("No Request Found");
-    await prisma.template
+    await prisma.animations
       .findMany({})
       .then((dbresolve) => {
         console.log(dbresolve);
