@@ -200,3 +200,31 @@ export async function handleGetAnimationDataById(
     res.status(400).send(err);
   }
 }
+
+
+export async function handleGetAnimationCanvasDataById(req:Request,res:Response,next:any){
+  if (!req) return res.sendStatus(404).end();
+  try {
+    const animationId: string = req.params.animationId;
+    await prisma.animations
+      .findUnique({
+        where: {
+          id: animationId,
+        },
+        select: {
+          canvas_data:true,
+        },
+      })
+      .then((dbresolve) => {
+        res.status(200).send(dbresolve);
+      })
+      .catch((dbreject) => {
+        console.log(dbreject);
+        res.status(400).send(dbreject);
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(400).send(error).end();
+  }
+
+}

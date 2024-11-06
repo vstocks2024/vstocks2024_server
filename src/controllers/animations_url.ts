@@ -1,3 +1,4 @@
+import { Request, Response } from "express";
 import { prisma } from "../prismaClient";
 import { limit } from "../utils/types";
 export async function handleGetAnimationsUrlListAll(
@@ -176,10 +177,10 @@ export async function handleGetHomePageAnimation(req: any, res: any, next: any) 
 }
 
 
-export async function handleGetAnimationsUrl(req: any, res: any, next: any){
+export async function handleGetAnimationsUrl(req:Request, res: Response, next: any){
   try {
     if (!req) return res.status(404).send("Request Not Found");
-    const currentPage = req.params.currentPage;
+    const currentPage = Number(req.params.currentPage);
     const totalAnimations = await prisma.animations_url.count();
 
     const totalPages =

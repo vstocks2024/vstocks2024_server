@@ -66,12 +66,13 @@ import {
   handleGetVectorsUrl,
   handleGetTotalVectorPages,
 } from "./controllers/vectors";
-import { handleListAllCustomers } from "./controllers/customers";
+import { handleListAllCustomers, handleListAllCustomers1 } from "./controllers/customers";
 import {
   handleCreateNewAnimation,
   handleDeleteAnimation,
   handleGetAnimationDataById,
   handleGetAnimationsList,
+  handleGetAnimationCanvasDataById
 } from "./controllers/animations";
 import cookieParser from "cookie-parser";
 import { handleGetCategoryByVector, handleGetTotalVectorPagesByCategoryName, handleGetVectorByCategoryName } from "./controllers/vector_category";
@@ -215,6 +216,7 @@ app.get("/vector_tag/tagname/:vectorId", handleGetTagByVector);
 //Customers API starts here
 
 app.get("/customers/listall", handleListAllCustomers);
+app.get("/customers/listall1", handleListAllCustomers1);
 
 //Images API
 
@@ -285,7 +287,9 @@ app.get(`/animations/totalpages/:currentPage/:currentLicense/:currentOrientation
 
 app.get(`/animations/getAnimationDataById/:animationId`,handleGetAnimationDataById);
 
-
+app.get(`/animations/getAnimationCanvasDataById/:animationId`,handleGetAnimationCanvasDataById);
 
 //Admin Authentication API
 app.use("/api/admin/auth",adminRoutes);
+
+
